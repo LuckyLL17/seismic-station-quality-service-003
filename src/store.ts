@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto';
 import type { Observation, QualityReport, Station } from './types.js';
 
 export const stations: Station[] = [
@@ -8,10 +7,3 @@ export const stations: Station[] = [
 ];
 export const observations: Observation[] = [];
 export const reports: QualityReport[] = [];
-export function createReport(stationId: string, start: string, end: string): QualityReport {
-  const rows = observations.filter(item => item.stationId === stationId && item.observedAt >= start && item.observedAt <= end);
-  const averageScore = rows.length ? Math.round(rows.reduce((sum, item) => sum + item.qualityScore, 0) / rows.length) : 0;
-  const issues = [...new Set(rows.flatMap(item => item.issues))];
-  const report = { id: randomUUID(), stationId, windowStart: start, windowEnd: end, observationCount: rows.length, averageScore, issues, generatedAt: new Date().toISOString() };
-  reports.push(report); return report;
-}
